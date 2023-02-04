@@ -1,0 +1,4 @@
+# ignore all mode_modules
+mode_modules/*
+# ignore config file
+config/config.env
