@@ -1,0 +1,9 @@
+{
+    "name":"BNH",
+    "address":"Changwattana Pakkret",
+    "district":"Pakkret",
+    "province":"Nonthaburi",
+    "postalcode":"10110",
+    "tel":"02-8369999",
+    "region":"กรุงเทพหมานคร (Bangkok)"
+}
