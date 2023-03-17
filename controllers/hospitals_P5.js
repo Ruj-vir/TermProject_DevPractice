@@ -7,16 +7,14 @@ exports.getHospitals = async (req, res, next) => {
     // Copy req.query 
     const reqQuery = {...req.query};
     // field to exclude 
-    const removeFields = ['select', 'sort','page','limit'];
+    const removeFields = ["select", "sort"];
     // Loop over remove fields and delere them from reqQuery 
     removeFields.forEach(param => delete reqQuery[param]);
     console.log(reqQuery);
 
     let queryStr = JSON.stringify(req.query);
-    // Crete Operator (gt,gte,etc) 
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-    // finding resource 
-    query = Hospital.find(JSON.parse(queryStr)).populate('appointments');
+    query = Hospital.find(JSON.parse(queryStr));
 
     //Select Fields
     if(req.query.select) {
@@ -31,35 +29,9 @@ exports.getHospitals = async (req, res, next) => {
     } else {
       query = query.sort("-createdAt");
     }
-     //Pagination
-     const page = parseInt(req.query.page, 10) || 1;
-     const limit = parseInt(req.query.limit, 10) || 25;
-     const total = await Hospital.countDocuments();
-     const startIndex = (page - 1) * limit;
-     const endIndex = page * limit;
-     query = query.skip(startIndex).limit(limit);
+
     try {
-      // Executing Query 
       const hospitals = await query;
-
-      
-
-      //Pagination result
-      const pagination = {};
-      if(endIndex < total) {
-        pagination.next = {
-          page: page + 1,
-          limit
-        }
-      }
-
-      if(startIndex > 0) {
-        pagination.prev = {
-          page: page - 1,
-          limit
-        }
-      }
-
       res.status(200).json({
         success: true,
         count:hospitals.length,
@@ -123,12 +95,12 @@ exports.updateHospital = async (req, res, next) => {
 //@access   Private
 exports.deleteHospital = async (req, res, next) => {
     try {
-      const hospital = await Hospital.findById(req.params.id);
+      const hospital = await Hospital.findByIdAndDelete(req.params.id);
   
       if (!hospital) {
         res.status(400).json({success: false,});
       }
-      hospital.remove();
+  
       res.status(200).json({success: true,data: {},});
     } catch (err) {
       res.status(400).json({success: false,});
