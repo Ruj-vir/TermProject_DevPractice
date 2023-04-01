@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const cors = require('cors');
 // Route files 
 const hospitals = require('./routes/hospitals');
 const appointments = require('./routes/appointments');
@@ -12,6 +13,7 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 const app = express();
+app.use(cors());
 // Body parser 
 app.use(express.json());
 // Cookie parser 
